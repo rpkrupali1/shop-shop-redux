@@ -22,6 +22,8 @@ This project is very similar to https://github.com/rpkrupali1/shop-shop in terms
 
 Please use below link to access this application:
 
+https://kp-shop-shop-redux.herokuapp.com/
+
 ## Application Details
 
 ### User Story
