@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/react-hooks";
 import { QUERY_CATEGORIES } from "../../utils/queries";
 import { useSelector, useDispatch } from "react-redux";
-import appReducer from "../../utils/reducers";
 import {
   UPDATE_CATEGORIES,
   UPDATE_CURRENT_CATEGORY,
 } from "../../utils/actions";
+import { idbPromise } from "../../utils/helpers";
 
-function CategoryMenu({ setCategory }) {
-  const { data: categoryData } = useQuery(QUERY_CATEGORIES);
+function CategoryMenu() {
+  const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
   //const categories = categoryData?.categories || [];
   const dispatch = useDispatch();
   const state = useSelector((state) => {
@@ -23,8 +23,15 @@ function CategoryMenu({ setCategory }) {
         type: UPDATE_CATEGORIES,
         categories: categoryData.categories,
       });
+    } else if (!loading) {
+      idbPromise("categories", "get").then((categories) => {
+        dispatch({
+          type: UPDATE_CATEGORIES,
+          categories: categories,
+        });
+      });
     }
-  }, [categoryData, dispatch]);
+  }, [categoryData, loading, dispatch]);
 
   const selectCategory = (id) => {
     dispatch({
